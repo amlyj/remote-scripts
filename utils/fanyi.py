@@ -32,7 +32,7 @@ def baidu_translate(q='test ok', f='en', t='zh'):
         data=params,
         headers=headers,
         timeout=5
-    ), ''
+    ), []
 
     if data.status_code == 200:
         data = data.content
@@ -41,14 +41,19 @@ def baidu_translate(q='test ok', f='en', t='zh'):
         raise Exception('connetion error')
 
     try:
-        result = data.get('trans_result').get('data')[0].get('dst')
+        for d in data.get('trans_result').get('data'):
+            result.append(d.get('dst'))
     except Exception, e:
         print e
 
-    return result
+    return '\n'.join(result)
 
 
 if __name__ == '__main__':
-    args = raw_input("请输入要翻译的英文: ");
-    result = baidu_translate(args)
-    print '##原文 %s :\n %s' % (args, result)
+    print '请输入要翻译的英文,输入EOF结束'
+    sentinel = 'EOF'  # 遇到这个就结束
+    lines = []
+    for line in iter(raw_input, sentinel):
+        lines.append(line)
+
+    print baidu_translate('\n'.join(lines))
