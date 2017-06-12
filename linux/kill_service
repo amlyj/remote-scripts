@@ -1,0 +1,25 @@
+#! /bin/bash
+#
+#kill your service
+
+echo "请输入你要杀死的服务名称[**请使用root帐户**]:"
+read kill_service
+arrays=`ps -ef|grep $kill_service|awk '!/grep/'|awk '{print $2}'`
+read -a array <<< $arrays
+if [ ${#array[@]} -eq 0 ]
+then
+   echo $kill_service'有关的进程没有找到'
+   exit
+fi
+
+echo -e "\n等待被杀死的进程号：${array[@]}"
+for i in ${array[@]}
+do
+   echo "*******杀死进程：$i"
+   kill -9  $i
+   if [ $? -ne 0 ] && [ $? -ne 1 ] 
+   then
+      exit
+   fi
+done
+echo "$kill_service 相关进程已经清除完毕..."
