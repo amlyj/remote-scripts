@@ -19,7 +19,7 @@ do
    sudo kill -9  $i
    if [ $? -ne 0 ] && [ $? -ne 1 ] 
    then
-      exit
+      continue
    fi
 done
 echo "$kill_service 相关进程已经清除完毕..."
